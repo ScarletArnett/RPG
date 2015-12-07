@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Chauviste Game</string>
+    <string name="pad">pad</string>
+    <string name="hero">hero</string>
+    <string name="buttons">a_b_buttons</string>
+    <string name="select">select</string>
+</resources>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:columnCount="15" android:rowCount="18" android:id="@+id/layout_creation">
+
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hero_selection" android:layout_x="165dp" android:layout_y="227dp"
+    />
+    <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                 android:id="@+id/right_arrow" android:layout_x="249dp" android:layout_y="232dp"
+                 android:src="@drawable/right_arrow"/>
+    <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                 android:id="@+id/left_arrow" android:layout_x="74dp" android:layout_y="230dp"
+                 android:src="@drawable/left_arrow"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SELECT"
+            android:id="@+id/select_hero" android:layout_x="143dp" android:layout_y="365dp"/>
+</AbsoluteLayout>

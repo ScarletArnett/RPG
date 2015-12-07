@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--suppress ALL -->
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:id="@+id/layout"
+              android:background="@android:color/white">
+
+    <!-- Game pad -->
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView" android:src="@drawable/pad" android:contentDescription="@string/pad"
+            android:layout_x="3dp" android:layout_y="320dp"/>
+    <ImageButton
+            style="?android:attr/buttonStyleSmall" android:layout_width="73dp" android:layout_height="62dp"
+            android:background="@android:color/transparent"
+            android:id="@+id/top" android:layout_x="65dp" android:layout_y="330dp"/>
+    <ImageButton style="?android:attr/buttonStyleSmall" android:layout_width="73dp" android:layout_height="62dp"
+            android:background="@android:color/transparent" android:id="@+id/bot" android:layout_x="65dp"
+            android:layout_y="450dp"/>
+    <ImageButton style="?android:attr/buttonStyleSmall" android:layout_width="62dp" android:layout_height="73dp"
+            android:background="@android:color/transparent" android:id="@+id/right" android:layout_x="129dp"
+            android:layout_y="383dp"/>
+    <ImageButton style="?android:attr/buttonStyleSmall" android:layout_width="62dp" android:layout_height="73dp"
+            android:background="@android:color/transparent" android:id="@+id/left" android:layout_x="15dp"
+            android:layout_y="383dp"/>
+
+    <!-- Hero Image -->
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/heroImage" android:layout_x="148dp" android:layout_y="213dp"
+            android:contentDescription="@string/hero"/>
+
+
+    <!-- Buttons A & B -->
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView2" android:layout_x="225dp" android:layout_y="332dp"
+            android:src="@drawable/buttons" android:contentDescription="@string/buttons"/>
+    <ImageButton style="?android:attr/buttonStyleSmall" android:layout_width="55dp" android:layout_height="55dp"
+            android:background="@android:color/transparent" android:id="@+id/a_Button" android:layout_x="285dp"
+            android:layout_y="335dp"/>
+    <ImageButton style="?android:attr/buttonStyleSmall" android:layout_width="55dp" android:layout_height="55dp"
+            android:background="@android:color/transparent" android:id="@+id/b_Button" android:layout_x="230dp"
+            android:layout_y="449dp"/>
+
+
+    <!-- Select Button -->
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView3" android:layout_x="210dp" android:layout_y="400dp"
+            android:src="@drawable/select" android:contentDescription="@string/select"/>
+    <ImageButton style="?android:attr/buttonStyleSmall" android:layout_width="130dp" android:layout_height="wrap_content"
+            android:background="@android:color/transparent" android:id="@+id/select" android:layout_x="220dp"
+            android:layout_y="395dp"/>
+
+
+    <View android:id="@+id/separator"
+          android:background="@android:color/background_dark"
+          android:layout_width = "fill_parent"
+          android:layout_height="4dp"
+          android:layout_y="318dp"/>
+
+    <!-- Menu -->
+    <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="320dp"
+            android:background="#D8000000"
+            android:visibility="invisible"
+            android:id="@+id/shadow" android:layout_x="0dp" android:layout_y="1dp"/>
+    <TextView
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:id="@+id/panel"
+            android:layout_x="28dp"
+            android:layout_y="5dp"
+            android:visibility="invisible"
+            android:background="@drawable/menu_select"
+            android:src="@drawable/menu_select"/>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
+                    android:id="@+id/panelLayout"
+                    android:layout_x="28dp"
+                    android:layout_y="5dp"
+                    android:orientation="vertical"
+                    android:visibility="invisible"
+                    android:background="@drawable/menu_select"
+                    android:src="@drawable/menu_select">
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Button"
+                android:visibility="invisible"
+                android:id="@+id/button2" android:layout_gravity="center_horizontal"/>
+        <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/stats_button" android:layout_gravity="center_horizontal"
+                android:background="@drawable/stats"/>
+        <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/inventaire_button" android:layout_gravity="center_horizontal"
+                android:background="@drawable/inventaire"/>
+        <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/save_button" android:layout_gravity="center_horizontal"
+                android:background="@drawable/sauvergarder"/>
+        <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/quitter_button" android:layout_gravity="center_horizontal"
+                android:background="@drawable/quitter"/>
+    </LinearLayout>
+
+
+
+</AbsoluteLayout>
+
