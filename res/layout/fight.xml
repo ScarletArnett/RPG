@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <!-- FIGHT SCENE -->
+    <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:id="@+id/fightBackground"
+            android:layout_above="@+id/menuBattleLayout" android:layout_alignParentStart="true"
+            android:background="@drawable/fight_forest_bg"/>
+
+    <!-- BOTTOM LAYOUTS -->
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="150dp"
+            android:layout_height="200dp" android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true" android:id="@+id/menuBattleLayout"
+            android:padding="10dip" android:background="@drawable/border" android:weightSum="1">
+        <Button
+                android:layout_width="128dp"
+                android:layout_height="wrap_content"
+                android:text="@string/ATTAQUE"
+                android:id="@+id/attackButton"
+                android:layout_weight="0.33"
+                android:background="@drawable/button_border"
+                android:textColor="@android:color/white"/>
+        <Button
+                android:layout_width="128dp"
+                android:layout_height="wrap_content"
+                android:text="@string/MAGIE"
+                android:id="@+id/magicButton"
+                android:layout_weight="0.33"
+                android:background="@drawable/button_border"
+                android:textColor="@android:color/white"/>
+        <Button
+                android:layout_width="128dp"
+                android:layout_height="wrap_content"
+                android:text="@string/FUIR"
+                android:id="@+id/runButton"
+                android:layout_weight="0.33"
+                android:background="@drawable/button_border"
+                android:textColor="@android:color/white"/>
+    </LinearLayout>
+
+    <!-- ATTACK LAYOUT -->
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="150dp"
+            android:layout_height="200dp" android:layout_alignParentBottom="true"
+            android:visibility="invisible"
+            android:layout_alignParentStart="true" android:id="@+id/menuAttackBattle"
+            android:padding="10dip" android:background="@drawable/border" android:weightSum="1">
+        <Button
+                android:layout_width="128dp"
+                android:layout_height="wrap_content"
+                android:text="AUTO-ATTAQUE"
+                android:id="@+id/autoAttack"
+                android:layout_weight="0.33"
+                android:background="@drawable/button_border"
+                android:textColor="@android:color/white"/>
+        <Button
+                android:layout_width="128dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/attackSpellOne"
+                android:layout_weight="0.33"
+                android:background="@drawable/button_border"
+                android:textColor="@android:color/white"/>
+        <Button
+                android:layout_width="128dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/attackSpellTwo"
+                android:layout_weight="0.33"
+                android:background="@drawable/button_border"
+                android:textColor="@android:color/white"/>
+    </LinearLayout>
+
+    <!-- MAGIC LAYOUT -->
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="150dp"
+            android:layout_height="200dp" android:layout_alignParentBottom="true"
+            android:visibility="invisible"
+            android:layout_alignParentStart="true" android:id="@+id/menuMagicBattle"
+
+            android:padding="10dip" android:background="@drawable/border" android:weightSum="1">
+        <Button
+                android:layout_width="128dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/magicSpellOne"
+                android:layout_weight="0.33"
+                android:background="@drawable/button_border"
+                android:textColor="@android:color/white"/>
+        <Button
+                android:layout_width="128dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/magicSpellTwo"
+                android:layout_weight="0.33"
+                android:background="@drawable/button_border"
+                android:textColor="@android:color/white"/>
+        <Button
+                android:layout_width="128dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/magicSpellThree"
+                android:layout_weight="0.33"
+                android:background="@drawable/button_border"
+                android:textColor="@android:color/white"/>
+    </LinearLayout>
+
+    <!-- HP MANA BAR -->
+    <RelativeLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@+id/menuBattleLayout" android:layout_below="@+id/fightBackground"
+            android:background="@drawable/border" android:id="@+id/linearLayout2">
+        <ProgressBar
+                android:id="@+id/hpBar"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal"
+                android:layout_alignParentTop="true" android:layout_centerHorizontal="true"
+                android:layout_marginTop="39dp"/>
+
+        <ProgressBar style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal" android:id="@+id/manaBar"
+                     android:layout_width="150dp" android:layout_height="wrap_content"
+                     android:layout_centerVertical="true" android:layout_centerHorizontal="true"
+                     android:indeterminate="false"/>
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/backArrow"
+                android:background="@android:color/transparent"
+                android:textColor="@android:color/white"
+                android:visibility="invisible"
+                android:text="RETOUR" android:layout_alignParentBottom="true" android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
+
+
+
+    <!-- HEROES -->
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/heroLeft"
+            android:layout_marginBottom="115dp"
+            android:layout_above="@+id/menuBattleLayout" android:layout_alignParentStart="true"
+            android:layout_marginStart="39dp"/>
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/enemy"
+            android:layout_alignBottom="@+id/heroLeft"
+            android:layout_alignEnd="@+id/linearLayout2" android:layout_marginEnd="46dp"/>
+
+</RelativeLayout>

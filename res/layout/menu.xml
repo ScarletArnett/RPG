@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent" android:background="@drawable/menu">
+
+    <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    <Button
+            android:layout_width="178dp"
+            android:layout_height="wrap_content"
+            android:text="NOUVELLE PARTIE"
+            android:id="@+id/new_game"
+            android:layout_weight="0.09"
+            android:background="@drawable/menubutton"
+            android:textColor="@android:color/white" android:layout_gravity="center_horizontal"/>
+    <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:text="New Button"
+            android:id="@+id/button" android:layout_gravity="center_horizontal"/>
+    <Button
+            android:layout_width="178dp"
+            android:layout_height="wrap_content"
+            android:text="CHARGER PARTIE"
+            android:id="@+id/new_load"
+            android:layout_weight="0.09"
+            android:background="@drawable/menubutton"
+            android:textColor="@android:color/white" android:layout_gravity="center_horizontal"/>
+    <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Button"
+            android:visibility="invisible"
+            android:id="@+id/button3" android:layout_gravity="center_horizontal"/>
+    <Button
+            android:layout_width="178dp"
+            android:layout_height="wrap_content"
+            android:text="QUITTER"
+            android:id="@+id/new_leave"
+            android:layout_weight="0.09"
+            android:background="@drawable/menubutton"
+            android:textColor="@android:color/white" android:layout_gravity="center_horizontal"/>
+    <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+</LinearLayout>

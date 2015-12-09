@@ -5,7 +5,7 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
               android:id="@+id/layout"
-              android:background="@android:color/white">
+              android:background="@drawable/test">
 
     <!-- Game pad -->
     <ImageView
@@ -31,7 +31,7 @@
     <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/heroImage" android:layout_x="148dp" android:layout_y="213dp"
+            android:id="@+id/heroImage"
             android:contentDescription="@string/hero"/>
 
 
@@ -56,43 +56,46 @@
             android:id="@+id/imageView3" android:layout_x="210dp" android:layout_y="400dp"
             android:src="@drawable/select" android:contentDescription="@string/select"/>
     <ImageButton style="?android:attr/buttonStyleSmall" android:layout_width="130dp" android:layout_height="wrap_content"
-            android:background="@android:color/transparent" android:id="@+id/select" android:layout_x="220dp"
-            android:layout_y="395dp"/>
-
-
-    <View android:id="@+id/separator"
-          android:background="@android:color/background_dark"
-          android:layout_width = "fill_parent"
-          android:layout_height="4dp"
-          android:layout_y="318dp"/>
+            android:background="@android:color/transparent" android:id="@+id/select_button_panel" android:layout_x="223dp"
+            android:layout_y="400dp"/>
 
     <!-- Menu -->
-    <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="320dp"
-            android:background="#D8000000"
-            android:visibility="invisible"
-            android:id="@+id/shadow" android:layout_x="0dp" android:layout_y="1dp"/>
-    <TextView
+    <RelativeLayout
             android:layout_width="300dp"
             android:layout_height="300dp"
-            android:id="@+id/panel"
+            android:id="@+id/statsPanel"
             android:layout_x="28dp"
             android:layout_y="5dp"
             android:visibility="invisible"
-            android:background="@drawable/menu_select"
-            android:src="@drawable/menu_select"/>
+            android:background="@drawable/border">
+
+        <ProgressBar style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal" android:id="@+id/statsHPBar"
+                     android:layout_width="200dp" android:layout_height="wrap_content"
+                     android:layout_marginTop="41dp" android:layout_alignParentTop="true"
+                     android:layout_centerHorizontal="true"/>
+        <ProgressBar style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal" android:id="@+id/statsManaBar"
+                     android:layout_width="200dp" android:layout_height="wrap_content"
+                     android:indeterminate="false"
+                     android:layout_below="@+id/statsHPBar" android:layout_alignStart="@+id/statsHPBar"
+                     android:layout_marginTop="45dp"/>
+        <TextView
+                android:layout_width="200dp"
+                android:layout_height="100dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/forceIntelPanel" android:layout_below="@+id/statsManaBar"
+                android:layout_alignStart="@+id/statsManaBar" android:layout_marginTop="48dp"/>
+    </RelativeLayout>
+
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="300dp"
-                    android:layout_height="300dp"
-                    android:id="@+id/panelLayout"
-                    android:layout_x="28dp"
-                    android:layout_y="5dp"
-                    android:orientation="vertical"
-                    android:visibility="invisible"
-                    android:background="@drawable/menu_select"
-                    android:src="@drawable/menu_select">
+                  android:layout_width="300dp"
+                  android:layout_height="300dp"
+                  android:id="@+id/panelLayout"
+                  android:layout_x="28dp"
+                  android:layout_y="5dp"
+                  android:orientation="vertical"
+                  android:visibility="invisible"
+                  android:background="@drawable/border" android:paddingStart="5dp">
 
         <Button
                 android:layout_width="wrap_content"
@@ -100,26 +103,42 @@
                 android:text="New Button"
                 android:visibility="invisible"
                 android:id="@+id/button2" android:layout_gravity="center_horizontal"/>
-        <ImageButton
-                android:layout_width="wrap_content"
+        <Button
+                android:layout_width="155dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/stats_button" android:layout_gravity="center_horizontal"
-                android:background="@drawable/stats"/>
-        <ImageButton
-                android:layout_width="wrap_content"
+                android:text="STATISTIQUES"
+                android:background="@drawable/button_border"/>
+        <View
+                android:layout_width="155dp"
+                android:layout_height="3dp"
+                android:background="@android:color/holo_blue_dark"/>
+        <Button
+                android:layout_width="155dp"
                 android:layout_height="wrap_content"
+                android:text="INVENTAIRE"
                 android:id="@+id/inventaire_button" android:layout_gravity="center_horizontal"
-                android:background="@drawable/inventaire"/>
-        <ImageButton
-                android:layout_width="wrap_content"
+                android:background="@drawable/button_border"/>
+        <View
+                android:layout_width="155dp"
+                android:layout_height="3dp"
+                android:background="@android:color/holo_blue_dark"/>
+        <Button
+                android:layout_width="155dp"
                 android:layout_height="wrap_content"
+                android:text="SAUVERGARDER"
                 android:id="@+id/save_button" android:layout_gravity="center_horizontal"
-                android:background="@drawable/sauvergarder"/>
-        <ImageButton
-                android:layout_width="wrap_content"
+                android:background="@drawable/button_border"/>
+        <View
+                android:layout_width="155dp"
+                android:layout_height="3dp"
+                android:background="@android:color/holo_blue_dark"/>
+        <Button
+                android:layout_width="155dp"
                 android:layout_height="wrap_content"
+                android:text="QUITTER"
                 android:id="@+id/quitter_button" android:layout_gravity="center_horizontal"
-                android:background="@drawable/quitter"/>
+                android:background="@drawable/button_border"/>
     </LinearLayout>
 
 

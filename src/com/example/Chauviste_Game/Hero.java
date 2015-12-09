@@ -1,16 +1,25 @@
 package com.example.Chauviste_Game;
 
-public class Hero {
-    public int force, intel, hp, mana, vigueur;
+import java.io.Serializable;
+import java.util.ArrayList;
 
-    public Hero() {
-        force   = 10 ;
-        intel   = 10 ;
-        hp      = 250;
-        mana    = 100;
-        vigueur = 100;
+abstract class Hero implements Serializable {
+    public int force, intel, hpMax, manaMax, hpCurrent, manaCurrent;
+    public boolean isWizard;
+    public ArrayList<String[]> attackSpell = new ArrayList<String[]>();
+    public ArrayList<String[]> magicSpell  = new ArrayList<String[]>();
+
+    public Hero(int force, int intel, int hpMax, int manaMax, boolean isWizard) {
+        this.force = force;
+        this.intel = intel;
+        this.hpMax = hpCurrent = hpMax;
+        this.manaMax = manaCurrent = manaMax;
+        this.isWizard = isWizard;
     }
 
+    public void addSpell(ArrayList arrayList, String[] spell){
+        arrayList.add(spell);
+    }
     public int getForce() {
         return force;
     }
@@ -27,27 +36,59 @@ public class Hero {
         this.intel = intel;
     }
 
-    public int getHp() {
-        return hp;
+    public int getHpMax() {
+        return hpMax;
     }
 
-    public void setHp(int hp) {
-        this.hp = hp;
+    public void setHpMax(int hhMax) {
+        this.hpMax = hhMax;
     }
 
-    public int getMana() {
-        return mana;
+    public int getManaMax() {
+        return manaMax;
     }
 
-    public void setMana(int mana) {
-        this.mana = mana;
+    public void setManaMax(int manaMax) {
+        this.manaMax = manaMax;
     }
 
-    public int getVigueur() {
-        return vigueur;
+    public int getManaCurrent() {
+        return manaCurrent;
     }
 
-    public void setVigueur(int vigueur) {
-        this.vigueur = vigueur;
+    public void setManaCurrent(int manaCurrent) {
+        this.manaCurrent = manaCurrent;
+    }
+
+    public int getHpCurrent() {
+        return hpCurrent;
+    }
+
+    public void setHpCurrent(int hpCurrent) {
+        this.hpCurrent = hpCurrent;
+    }
+
+    public boolean isWizard() {
+        return isWizard;
+    }
+
+    public void setWizard(boolean wizard) {
+        isWizard = wizard;
+    }
+
+    public ArrayList<String[]> getAttackSpell() {
+        return attackSpell;
+    }
+
+    public void setAttackSpell(ArrayList<String[]> attackSpell) {
+        this.attackSpell = attackSpell;
+    }
+
+    public ArrayList<String[]> getMagicSpell() {
+        return magicSpell;
+    }
+
+    public void setMagicSpell(ArrayList<String[]> magicSpell) {
+        this.magicSpell = magicSpell;
     }
 }
