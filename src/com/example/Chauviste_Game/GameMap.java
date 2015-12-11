@@ -14,10 +14,10 @@ public class GameMap extends View {
             "                                                                    ",
             "                                                                    ",
             "                                                                    ",
-            "                                    .                               ",
+            "                                                                    ",
             "                                                                    ",
             "                         $                                          ",
-            "                 .           X               .                      ",
+            "                             X                                      ",
             "                            .                                       ",
             "                                                                    ",
             "                                                                    ",
@@ -67,13 +67,13 @@ public class GameMap extends View {
         this.tileset = BitmapFactory.decodeResource(context.getResources(), R.drawable.tileset);
         this.tilesetPaint = new Paint();
 
-        outer: for (int i = 0; i < MAP.length; i++) {
-            String line = MAP[i];
-            for (int j = 0; j < line.length(); j++) {
-                char tile = line.charAt(j);
+        outer: for (int y = 0; y < MAP.length; y++) {
+            String line = MAP[y];
+            for (int x = 0; x < line.length(); x++) {
+                char tile = line.charAt(x);
                 if (tile == 'X') {
-                    this.posx = i;
-                    this.posy = j;
+                    this.posx = x;
+                    this.posy = y;
                     break outer;
                 }
             }
@@ -88,14 +88,15 @@ public class GameMap extends View {
     protected void onDraw(Canvas canvas) {
         // bounds of the screen in term of tiles
         // in other words, how many tiles can we fit on the screen?
-        int w = getWidth() / TILE_WIDTH, h = getHeight() / TILE_HEIGHT;
+        int w = (int) Math.ceil((double) getWidth() / TILE_WIDTH),
+            h = (int) Math.ceil((double) getHeight() / TILE_HEIGHT);
 
         // find the origin of the screen, ie. where the player will be centered
-        int originx = w/2, originy = w/2;
+        int originx = (w-1)/2, originy = (h-1)/2;
 
         // draw the map on the screen
-        for (int x = 0; x < w; x++) {
-            for (int y = 0; y < h; y++) {
+        for (int y = 0; y < w; y++) {
+            for (int x = 0; x < h; x++) {
                 // we got the tile coordinates, let's get them in term of pixels
                 rect.set(x * TILE_WIDTH, y * TILE_HEIGHT, (x+1) * TILE_WIDTH, (y+1) * TILE_HEIGHT);
 
@@ -105,11 +106,11 @@ public class GameMap extends View {
                 // apply the relative coordinates to the current position on the map
                 int mapx = posx + rx, mapy = posy + ry;
 
-                if (mapx < 0 || mapx > MAP.length || mapy < 0 || mapy > MAP[x].length()) {
+                if (mapy < 0 || mapy > MAP.length || mapx < 0 || mapx > MAP[mapy].length()) {
                     // draw nothing if we are getting close to the map boundaries
                     canvas.drawRect(rect, black);
                 } else {
-                    char tile = MAP[mapx].charAt(mapy);
+                    char tile = MAP[mapy].charAt(mapx);
                     switch (tile) {
                         case 'X':
                         case ' ':
