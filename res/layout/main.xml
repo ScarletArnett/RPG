@@ -5,7 +5,12 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
               android:id="@+id/layout"
-              android:background="@drawable/test">
+              android:background="@android:color/white">
+
+    <com.example.Chauviste_Game.GameMap
+        android:layout_height="323dp"
+        android:layout_width="fill_parent"
+        android:id="@+id/gameMap"/>
 
     <!-- Game pad -->
     <ImageView
@@ -26,13 +31,6 @@
     <ImageButton style="?android:attr/buttonStyleSmall" android:layout_width="62dp" android:layout_height="73dp"
             android:background="@android:color/transparent" android:id="@+id/left" android:layout_x="15dp"
             android:layout_y="383dp"/>
-
-    <!-- Hero Image -->
-    <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/heroImage"
-            android:contentDescription="@string/hero"/>
 
 
     <!-- Buttons A & B -->

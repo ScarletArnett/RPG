@@ -16,7 +16,6 @@ public class MyActivity extends Activity {
 
     private ImageButton topArrow, leftArrow, botArrow, rightArrow, buttonA, buttonB, buttonSelect;
     private Button statButton, saveButton,quitButton,inventoryButton;
-    private ImageView heroImage;
     private RelativeLayout statsPanel;
     private LinearLayout panelLayout;
     private Boolean isLoad;
@@ -38,7 +37,6 @@ public class MyActivity extends Activity {
         rightArrow   = (ImageButton)findViewById(R.id.right)        ;
         buttonA      = (ImageButton)findViewById(R.id.a_Button)     ;
         buttonB      = (ImageButton)findViewById(R.id.b_Button)     ;
-        heroImage    = (ImageView) findViewById(R.id.heroImage);
         statsPanel   = (RelativeLayout) findViewById(R.id.statsPanel)     ;
         buttonSelect = (ImageButton) findViewById(R.id.select_button_panel)      ;
         panelLayout  = (LinearLayout) findViewById(R.id.panelLayout);
@@ -72,45 +70,21 @@ public class MyActivity extends Activity {
         topArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                float heroY = heroImage.getY();
-                if ( heroY < yTopLimit ){
-                    heroImage.setY(heroY);
-                } else {
-                    heroImage.setY(heroImage.getY()-100);
-                }
             }
         });
         botArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                float heroY = heroImage.getY();
-                if( heroY > yBotLimit ){
-                    heroImage.setY(heroY);
-                } else {
-                    heroImage.setY(heroImage.getY()+100);
-                }
             }
         });
         leftArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                float heroX = heroImage.getX();
-                if (heroX < xLeftLimit){
-                    heroImage.setX(heroX);
-                } else{
-                    heroImage.setX(heroImage.getX()-100);
-                }
             }
         });
         rightArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                float heroX = heroImage.getX();
-                if (heroX > xRightLimit){
-                    heroImage.setX(heroX);
-                } else{
-                    heroImage.setX(heroImage.getX()+100);
-                }
             }
         });
         buttonA.setOnClickListener(new View.OnClickListener() {
@@ -174,8 +148,8 @@ public class MyActivity extends Activity {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public void createFile(){
-        String save_struc = heroImage.getX() + "\n" +
-                            heroImage.getY() + "\n" +
+        String save_struc = 0 + "\n" +
+                            0 + "\n" +
                             heroDrawableId;
         File save = new File(Environment.getExternalStorageDirectory().getPath()+"/chauviste_save.txt");
         if(save.exists()){
@@ -210,8 +184,8 @@ public class MyActivity extends Activity {
     }
 
     public void setHeroPosition(float x, float y){
-        heroImage.setX(x);
-        heroImage.setY(y);
+//        heroImage.setX(x);
+//        heroImage.setY(y);
     }
 
     public void swapViewVisibility(View view){
@@ -226,7 +200,7 @@ public class MyActivity extends Activity {
         /* Intent from hero creation*/
         Intent intent = getIntent();
         heroDrawableId = intent.getIntExtra("heroResource",R.drawable.hero_cowboy);
-        heroImage.setBackgroundResource(heroDrawableId);
+//        heroImage.setBackgroundResource(heroDrawableId);
         isLoad = intent.getBooleanExtra("load",false);
     }
 
@@ -234,7 +208,7 @@ public class MyActivity extends Activity {
         Intent afterFight = getIntent();
         if((afterFight.getSerializableExtra("hero") != null)){
             saitama = (Hero)afterFight.getSerializableExtra("hero");
-            heroImage.setBackgroundResource(afterFight.getIntExtra("heroImage",R.drawable.hero_cowboy));
+//            heroImage.setBackgroundResource(afterFight.getIntExtra("heroImage",R.drawable.hero_cowboy));
         }
     }
 
@@ -245,7 +219,7 @@ public class MyActivity extends Activity {
             float y = Float.parseFloat(resArray.get(1));
             heroDrawableId = Integer.parseInt(resArray.get(2));
             setHeroPosition(x,y);
-            heroImage.setBackgroundResource(heroDrawableId);
+//            heroImage.setBackgroundResource(heroDrawableId);
             Toast.makeText(getApplicationContext(),"Load completed",Toast.LENGTH_SHORT).show();
         } else {
             setHeroPosition(5,5);

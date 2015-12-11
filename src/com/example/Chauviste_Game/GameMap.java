@@ -1,0 +1,147 @@
+package com.example.Chauviste_Game;
+
+import android.content.Context;
+import android.graphics.*;
+import android.util.AttributeSet;
+import android.view.View;
+
+/**
+ * @author Antoine Chauvin
+ */
+public class GameMap extends View {
+    public static final String[] MAP = {
+            "                                                                    ",
+            "                                                                    ",
+            "                                                                    ",
+            "                                                                    ",
+            "                                    .                               ",
+            "                                                                    ",
+            "                         $                                          ",
+            "                 .           X               .                      ",
+            "                            .                                       ",
+            "                                                                    ",
+            "                                                                    ",
+            "                                                                    ",
+            "                                                                    ",
+            "                                                                    ",
+            "                                                                    ",
+    };
+
+    // density of pixel
+    public static final int DP = 3;
+
+    public static final int TILE_WIDTH = 32 * DP, TILE_HEIGHT = 32 * DP;
+    public static final int HERO_WIDTH = 32 * DP, HERO_HEIGHT = 48 * DP;
+//    public static final int TILE_WIDTH = 40 * DP, TILE_HEIGHT = 40 * DP;
+
+    public static Rect getTile(int x, int y) {
+        return new Rect(x*TILE_WIDTH, y*TILE_HEIGHT, (x+1) * TILE_WIDTH, (y+1) * TILE_HEIGHT);
+    }
+
+    public static final Rect GRASS_TILE = getTile(0, 0);
+    public static final Rect PAVEMENT_TILE = getTile(1, 0);
+    public static final Rect TREE_TILE = getTile(0, 1);
+//    public static final Rect GRASS_TILE = getTile(6, 3);
+
+    private Paint black;
+
+    private Bitmap hero;
+    private Paint heroPaint;
+
+    private Bitmap tileset;
+    private Paint tilesetPaint;
+
+    private Rect rect = new Rect(0, 0, TILE_WIDTH, TILE_HEIGHT);
+
+    private int posx, posy;
+
+    public GameMap(Context context) {
+        super(context);
+
+        this.black = new Paint();
+        this.black.setColor(Color.BLACK);
+
+        this.hero = BitmapFactory.decodeResource(context.getResources(), R.drawable.hero_overwatch);
+        this.heroPaint = new Paint();
+
+        this.tileset = BitmapFactory.decodeResource(context.getResources(), R.drawable.tileset);
+        this.tilesetPaint = new Paint();
+
+        outer: for (int i = 0; i < MAP.length; i++) {
+            String line = MAP[i];
+            for (int j = 0; j < line.length(); j++) {
+                char tile = line.charAt(j);
+                if (tile == 'X') {
+                    this.posx = i;
+                    this.posy = j;
+                    break outer;
+                }
+            }
+        }
+    }
+
+    public GameMap(Context context, AttributeSet attrs) {
+        this(context);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        // bounds of the screen in term of tiles
+        // in other words, how many tiles can we fit on the screen?
+        int w = getWidth() / TILE_WIDTH, h = getHeight() / TILE_HEIGHT;
+
+        // find the origin of the screen, ie. where the player will be centered
+        int originx = w/2, originy = w/2;
+
+        // draw the map on the screen
+        for (int x = 0; x < w; x++) {
+            for (int y = 0; y < h; y++) {
+                // we got the tile coordinates, let's get them in term of pixels
+                rect.set(x * TILE_WIDTH, y * TILE_HEIGHT, (x+1) * TILE_WIDTH, (y+1) * TILE_HEIGHT);
+
+                // get the relative coordinates
+                int rx = x - originx, ry = y - originy;
+
+                // apply the relative coordinates to the current position on the map
+                int mapx = posx + rx, mapy = posy + ry;
+
+                if (mapx < 0 || mapx > MAP.length || mapy < 0 || mapy > MAP[x].length()) {
+                    // draw nothing if we are getting close to the map boundaries
+                    canvas.drawRect(rect, black);
+                } else {
+                    char tile = MAP[mapx].charAt(mapy);
+                    switch (tile) {
+                        case 'X':
+                        case ' ':
+                            canvas.drawBitmap(tileset, GRASS_TILE, rect, tilesetPaint);
+                            break;
+
+                        case '.':
+                            canvas.drawBitmap(tileset, PAVEMENT_TILE, rect, tilesetPaint);
+                            break;
+
+                        case '$':
+                            canvas.drawBitmap(tileset, TREE_TILE, rect, tilesetPaint);
+                            break;
+
+                        default:
+                            // we found an unsupported tile, just draw nothing and ignore the fact
+                            canvas.drawRect(rect, black);
+                            break;
+                    }
+                }
+            }
+        }
+
+        // the hero will correctly be drawn such as its feet touch the ground
+        // and its head overflows on top of its tile,
+        // and its body its correctly centered on the tile
+        //noinspection PointlessArithmeticExpression
+        canvas.drawBitmap(hero,
+                // center the body
+                originx * TILE_WIDTH + (TILE_WIDTH - HERO_WIDTH) / 2,
+                // place the feet on the tile and let the head overflow on top
+                originy * TILE_HEIGHT - HERO_HEIGHT + TILE_HEIGHT,
+                heroPaint);
+    }
+}

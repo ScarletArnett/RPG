@@ -5,3 +5,4 @@ local.properties
 *.iml
 *.iws
 *.ipr
+.DS_Store
