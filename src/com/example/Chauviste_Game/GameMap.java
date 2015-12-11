@@ -45,26 +45,26 @@ public class GameMap extends View {
 
     private Paint black;
 
-    private Bitmap hero;
+    private Bitmap heroSprite;
     private Paint heroPaint;
 
-    private Bitmap tileset;
+    private Bitmap tilesetSprite;
     private Paint tilesetPaint;
 
     private Rect rect = new Rect(0, 0, TILE_WIDTH, TILE_HEIGHT);
 
-    private int posx, posy;
+    private int startx, starty;
+    private Hero hero;
 
-    public GameMap(Context context) {
-        super(context);
+    public GameMap(Context context, AttributeSet attrs) {
+        super(context, attrs);
 
         this.black = new Paint();
         this.black.setColor(Color.BLACK);
 
-        this.hero = BitmapFactory.decodeResource(context.getResources(), R.drawable.hero_overwatch);
         this.heroPaint = new Paint();
 
-        this.tileset = BitmapFactory.decodeResource(context.getResources(), R.drawable.tileset);
+        this.tilesetSprite = BitmapFactory.decodeResource(context.getResources(), R.drawable.tileset);
         this.tilesetPaint = new Paint();
 
         outer: for (int y = 0; y < MAP.length; y++) {
@@ -72,16 +72,24 @@ public class GameMap extends View {
             for (int x = 0; x < line.length(); x++) {
                 char tile = line.charAt(x);
                 if (tile == 'X') {
-                    this.posx = x;
-                    this.posy = y;
+                    this.startx = x;
+                    this.starty = y;
                     break outer;
                 }
             }
         }
+
+        setHero(new Cowboy(), true);
     }
 
-    public GameMap(Context context, AttributeSet attrs) {
-        this(context);
+    public void setHero(Hero hero, boolean starting) {
+        this.hero = hero;
+        if (starting) {
+            this.hero.setPosx(startx);
+            this.hero.setPosy(starty);
+        }
+        this.heroSprite = BitmapFactory.decodeResource(getResources(), this.hero.getSpriteId());
+        invalidate();
     }
 
     @Override
@@ -104,9 +112,9 @@ public class GameMap extends View {
                 int rx = x - originx, ry = y - originy;
 
                 // apply the relative coordinates to the current position on the map
-                int mapx = posx + rx, mapy = posy + ry;
+                int mapx = hero.getPosx() + rx, mapy = hero.getPosy() + ry;
 
-                if (mapy < 0 || mapy > MAP.length || mapx < 0 || mapx > MAP[mapy].length()) {
+                if (mapy < 0 || mapy >= MAP.length || mapx < 0 || mapx >= MAP[mapy].length()) {
                     // draw nothing if we are getting close to the map boundaries
                     canvas.drawRect(rect, black);
                 } else {
@@ -114,15 +122,15 @@ public class GameMap extends View {
                     switch (tile) {
                         case 'X':
                         case ' ':
-                            canvas.drawBitmap(tileset, GRASS_TILE, rect, tilesetPaint);
+                            canvas.drawBitmap(tilesetSprite, GRASS_TILE, rect, tilesetPaint);
                             break;
 
                         case '.':
-                            canvas.drawBitmap(tileset, PAVEMENT_TILE, rect, tilesetPaint);
+                            canvas.drawBitmap(tilesetSprite, PAVEMENT_TILE, rect, tilesetPaint);
                             break;
 
                         case '$':
-                            canvas.drawBitmap(tileset, TREE_TILE, rect, tilesetPaint);
+                            canvas.drawBitmap(tilesetSprite, TREE_TILE, rect, tilesetPaint);
                             break;
 
                         default:
@@ -138,7 +146,7 @@ public class GameMap extends View {
         // and its head overflows on top of its tile,
         // and its body its correctly centered on the tile
         //noinspection PointlessArithmeticExpression
-        canvas.drawBitmap(hero,
+        canvas.drawBitmap(heroSprite,
                 // center the body
                 originx * TILE_WIDTH + (TILE_WIDTH - HERO_WIDTH) / 2,
                 // place the feet on the tile and let the head overflow on top

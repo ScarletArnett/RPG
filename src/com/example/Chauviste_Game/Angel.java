@@ -12,5 +12,6 @@ public class Angel extends Hero {
         super.addSpell(super.getMagicSpell(),spellOne);
         super.addSpell(super.getMagicSpell(),spellTwo);
         super.addSpell(super.getMagicSpell(),spellThree);
+        setSpriteId(R.drawable.hero_angel);
     }
 }

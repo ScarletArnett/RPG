@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
 import android.widget.*;
+
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("deprecation")
 public class MyActivity extends Activity {
@@ -18,13 +20,12 @@ public class MyActivity extends Activity {
     private Button statButton, saveButton,quitButton,inventoryButton;
     private RelativeLayout statsPanel;
     private LinearLayout panelLayout;
-    private Boolean isLoad;
-    private ArrayList<String> resArray = new ArrayList<String>();
-    private int heroDrawableId;
     private ProgressBar manaBar, hpBar;
     private TextView forceIntel;
-    private float xLeftLimit = 92, yTopLimit = 48, yBotLimit = 1904, xRightLimit = 1192;
-    Hero saitama;
+    private GameMap gameMap;
+
+    private Hero saitama;
+    private boolean newGame;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,44 +48,51 @@ public class MyActivity extends Activity {
         hpBar        = (ProgressBar) findViewById(R.id.statsHPBar);
         forceIntel   = (TextView) findViewById(R.id.forceIntelPanel);
         inventoryButton   = (Button) findViewById(R.id.inventaire_button);
+        gameMap = (GameMap) findViewById(R.id.gameMap);
+
         //statsPanel.setPadding(50,100,0,0);
 
         hpBar.getProgressDrawable().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
         manaBar.getProgressDrawable().setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_IN);
 
-        receiveIntent();
-        setFromLoad();
+        newGame = false;
+        saitama = receiveIntent();
+        gameMap.setHero(saitama, newGame);
         createButtonListeners();
-
-        saitama = createHero();
-        receiveIntentAfterFight();
 
         setHpBar(saitama.getHpCurrent(),saitama.getHpMax());
         setManaBar(saitama.getManaCurrent(),saitama.getManaMax());
 
         createStatsString(saitama);
-
     }
 
     public void createButtonListeners(){
         topArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                saitama.setPosy(saitama.getPosy() - 1);
+                gameMap.invalidate();
             }
         });
         botArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                saitama.setPosy(saitama.getPosy() + 1);
+                gameMap.invalidate();
             }
         });
         leftArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                saitama.setPosx(saitama.getPosx() - 1);
+                gameMap.invalidate();
             }
         });
         rightArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                saitama.setPosx(saitama.getPosx() + 1);
+                gameMap.invalidate();
             }
         });
         buttonA.setOnClickListener(new View.OnClickListener() {
@@ -148,9 +156,9 @@ public class MyActivity extends Activity {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public void createFile(){
-        String save_struc = 0 + "\n" +
-                            0 + "\n" +
-                            heroDrawableId;
+        String save_struc = saitama.getPosx() + "\n" +
+                            saitama.getPosy() + "\n" +
+                            saitama.getSpriteId();
         File save = new File(Environment.getExternalStorageDirectory().getPath()+"/chauviste_save.txt");
         if(save.exists()){
             save.delete();
@@ -169,7 +177,8 @@ public class MyActivity extends Activity {
         }
     }
 
-    public void loadFile(){
+    public List<String> loadFile(){
+        List<String> resArray = new ArrayList<String>();
         File save = new File(Environment.getExternalStorageDirectory().getPath()+"/chauviste_save.txt");
         try {
             BufferedReader br = new BufferedReader(new FileReader(save));
@@ -181,11 +190,12 @@ public class MyActivity extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return resArray;
     }
 
     public void setHeroPosition(float x, float y){
-//        heroImage.setX(x);
-//        heroImage.setY(y);
+        saitama.setPosx(Math.round(x));
+        saitama.setPosy(Math.round(y));
     }
 
     public void swapViewVisibility(View view){
@@ -196,38 +206,32 @@ public class MyActivity extends Activity {
         }
     }
 
-    public void receiveIntent(){
+    public Hero receiveIntent(){
         /* Intent from hero creation*/
         Intent intent = getIntent();
-        heroDrawableId = intent.getIntExtra("heroResource",R.drawable.hero_cowboy);
-//        heroImage.setBackgroundResource(heroDrawableId);
-        isLoad = intent.getBooleanExtra("load",false);
-    }
+        Hero hero = (Hero) intent.getSerializableExtra("hero");
 
-    public void receiveIntentAfterFight(){
-        Intent afterFight = getIntent();
-        if((afterFight.getSerializableExtra("hero") != null)){
-            saitama = (Hero)afterFight.getSerializableExtra("hero");
-//            heroImage.setBackgroundResource(afterFight.getIntExtra("heroImage",R.drawable.hero_cowboy));
-        }
-    }
-
-    public void setFromLoad(){
-        if(isLoad){
-            loadFile();
-            float x = Float.parseFloat(resArray.get(0));
-            float y = Float.parseFloat(resArray.get(1));
-            heroDrawableId = Integer.parseInt(resArray.get(2));
-            setHeroPosition(x,y);
-//            heroImage.setBackgroundResource(heroDrawableId);
-            Toast.makeText(getApplicationContext(),"Load completed",Toast.LENGTH_SHORT).show();
+        if (hero != null) {
+            return hero;
+        } else if (intent.getBooleanExtra("load",false)) {
+            return setFromLoad();
         } else {
-            setHeroPosition(5,5);
-            Toast.makeText(getApplicationContext(),"NOT LOADED",Toast.LENGTH_SHORT).show();
+            newGame = true;
+            int spriteId = intent.getIntExtra("heroResource",R.drawable.hero_cowboy);
+            return createHero(spriteId);
         }
     }
 
-    public Hero createHero(){
+    public Hero setFromLoad(){
+        List<String> resArray = loadFile();
+        float x = Float.parseFloat(resArray.get(0));
+        float y = Float.parseFloat(resArray.get(1));
+        int heroDrawableId = Integer.parseInt(resArray.get(2));
+        setHeroPosition(x,y);
+        return createHero(heroDrawableId);
+    }
+
+    public Hero createHero(int heroDrawableId){
         Hero hero;
         switch (heroDrawableId){
             case R.drawable.hero_angel:
@@ -256,7 +260,7 @@ public class MyActivity extends Activity {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("attackSpell",saitama.getAttackSpell());
         intent.putExtra("magicSpell",saitama.getMagicSpell());
-        intent.putExtra("heroImage",heroDrawableId);
+        intent.putExtra("heroImage",saitama.getSpriteId());
         intent.putExtra("saitama",saitama);
         getApplicationContext().startActivity(intent);
     }

@@ -11,5 +11,6 @@ public class Assassin extends Hero {
         super(50, 10, 300, 100, true);
         super.addSpell(super.getAttackSpell(),spellOne);
         super.addSpell(super.getAttackSpell(),spellTwo);
+        setSpriteId(R.drawable.hero_grill);
     }
 }

@@ -9,12 +9,39 @@ abstract class Hero implements Serializable {
     public ArrayList<String[]> attackSpell = new ArrayList<String[]>();
     public ArrayList<String[]> magicSpell  = new ArrayList<String[]>();
 
+    private int posx, posy;
+    private int spriteId;
+
     public Hero(int force, int intel, int hpMax, int manaMax, boolean isWizard) {
         this.force = force;
         this.intel = intel;
         this.hpMax = hpCurrent = hpMax;
         this.manaMax = manaCurrent = manaMax;
         this.isWizard = isWizard;
+    }
+
+    public int getPosx() {
+        return posx;
+    }
+
+    public void setPosx(int posx) {
+        this.posx = posx;
+    }
+
+    public int getPosy() {
+        return posy;
+    }
+
+    public void setPosy(int posy) {
+        this.posy = posy;
+    }
+
+    public int getSpriteId() {
+        return spriteId;
+    }
+
+    public void setSpriteId(int spriteId) {
+        this.spriteId = spriteId;
     }
 
     public void addSpell(ArrayList arrayList, String[] spell){

@@ -12,5 +12,6 @@ public class Robot extends Hero {
         super(25, 25, 400, 100, true);
         super.addSpell(super.getAttackSpell(),spellOne);
         super.addSpell(super.getAttackSpell(),spellTwo);
+        setSpriteId(R.drawable.hero_robo);
     }
 }
