@@ -2,3 +2,6 @@
 out/
 gen/
 local.properties
+*.iml
+*.iws
+*.ipr
