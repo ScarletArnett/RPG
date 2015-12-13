@@ -22,7 +22,7 @@ public class MyActivity extends Activity {
     private LinearLayout panelLayout;
     private ProgressBar manaBar, hpBar;
     private TextView forceIntel;
-    private GameMap gameMap;
+    private GameMapView gameMap;
 
     private Hero saitama;
     private boolean newGame;
@@ -48,7 +48,7 @@ public class MyActivity extends Activity {
         hpBar        = (ProgressBar) findViewById(R.id.statsHPBar);
         forceIntel   = (TextView) findViewById(R.id.forceIntelPanel);
         inventoryButton   = (Button) findViewById(R.id.inventaire_button);
-        gameMap = (GameMap) findViewById(R.id.gameMap);
+        gameMap = (GameMapView) findViewById(R.id.gameMap);
 
         //statsPanel.setPadding(50,100,0,0);
 

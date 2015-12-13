@@ -7,7 +7,7 @@
               android:id="@+id/layout"
               android:background="@android:color/white">
 
-    <com.example.Chauviste_Game.GameMap
+    <com.example.Chauviste_Game.GameMapView
         android:layout_height="323dp"
         android:layout_width="fill_parent"
         android:id="@+id/gameMap"/>
