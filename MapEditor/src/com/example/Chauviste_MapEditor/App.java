@@ -2,236 +2,21 @@ package com.example.Chauviste_MapEditor;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Optional;
-import java.util.function.Supplier;
 
 /**
  * @author Antoine Chauvin
  */
 public final class App extends Application {
-    public static class Tileset {
-        private final Image image;
-        private final int width, height;
-
-        public Tileset(Image image, int width, int height) {
-            this.image = image;
-            this.width = width;
-            this.height = height;
-        }
-
-        public Tileset(Path path, int height, int width) throws IOException {
-            this(new Image(Files.newInputStream(path)), width, height);
-        }
-
-        public Tile at(int i, int j) {
-            return new Tile(i, j);
-        }
-
-        public int getMaxTileX() {
-            return (int) image.getWidth() / width;
-        }
-
-        public int getMaxTileY() {
-            return (int) image.getHeight() / height;
-        }
-
-        public Image getImage() {
-            return image;
-        }
-
-        public int getWidth() {
-            return width;
-        }
-
-        public int getHeight() {
-            return height;
-        }
-
-        public class Tile {
-            private final int i, j;
-
-            public Tile(int i, int j) {
-                this.i = i;
-                this.j = j;
-            }
-
-            public void draw(GraphicsContext g, int x, int y) {
-                g.drawImage(image, i * width, j * width, width, height, x * width, y * height, width, height);
-            }
-        }
-    }
-
-    public static class Map extends Canvas {
-        private final Tileset tileset;
-        private final Tileset.Tile[][] tiles;
-        private final int width, height;
-        private final Supplier<Optional<Tileset.Tile>> tileSupplier;
-        private boolean grid = true;
-
-        public Map(Tileset tileset, Tileset.Tile[][] tiles, int width, int height, Supplier<Optional<Tileset.Tile>> tileSupplier) {
-            this.tileset = tileset;
-            this.tiles = tiles;
-            this.width = width;
-            this.height = height;
-            this.tileSupplier = tileSupplier;
-
-            setWidth(tileset.getWidth() * width);
-            setHeight(tileset.getHeight() * height);
-
-            setOnMouseClicked(this::placeTile);
-            setOnMouseDragged(this::placeTile);
-
-            clearWith(tileset.at(0, 0));
-        }
-
-        public Map(Tileset tileset, int width, int height, Supplier<Optional<Tileset.Tile>> tileSupplier) {
-            this(tileset, new Tileset.Tile[height][width], width, height, tileSupplier);
-        }
-
-        public void toggleGrid() {
-            grid = !grid;
-            draw();
-        }
-
-        private void placeTile(MouseEvent evt) {
-            Optional<Tileset.Tile> tile = tileSupplier.get();
-            if (!tile.isPresent()) {
-                return;
-            }
-
-            int x = (int) evt.getX() / tileset.getWidth();
-            int y = (int) evt.getY() / tileset.getHeight();
-
-            tiles[y][x] = tile.get();
-            draw();
-        }
-
-        private void clearWith(Tileset.Tile tile) {
-            for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++) {
-                    tiles[y][x] = tile;
-                }
-            }
-            draw();
-        }
-
-        private void draw() {
-            GraphicsContext g = getGraphicsContext2D();
-
-            g.setStroke(Color.BLACK);
-            for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++) {
-                    Tileset.Tile tile = tiles[y][x];
-                    tile.draw(g, x, y);
-                    if (grid) {
-                        g.strokeRect(x * tileset.getWidth(), y * tileset.getHeight(), tileset.getWidth(), tileset.getHeight());
-                    }
-                }
-            }
-        }
-
-        private void saveTo(File file) throws IOException {
-            try (DataOutputStream out = new DataOutputStream(new FileOutputStream(file))) {
-                out.writeInt(tileset.getWidth());
-                out.writeInt(tileset.getHeight());
-
-                BufferedImage img = SwingFXUtils.fromFXImage(tileset.getImage(), null);
-                ImageIO.write(img, "png", out);
-
-                out.writeInt(width);
-                out.writeInt(height);
-
-                for (int y = 0; y < height; y++) {
-                    for (int x = 0; x < width; x++) {
-                        Tileset.Tile tile = tiles[y][x];
-                        out.writeInt(tile.i);
-                        out.writeInt(tile.j);
-                    }
-                }
-            }
-        }
-
-        public static Map readFrom(File file, Supplier<Optional<Tileset.Tile>> tileSupplier) throws IOException {
-            try (DataInputStream in = new DataInputStream(new FileInputStream(file))) {
-                int tileWidth = in.readInt();
-                int tileHeight = in.readInt();
-
-                Image img = SwingFXUtils.toFXImage(ImageIO.read(in), null);
-                Tileset tileset = new Tileset(img, tileWidth, tileHeight);
-
-                int width = in.readInt();
-                int height = in.readInt();
-                Tileset.Tile[][] tiles = new Tileset.Tile[height][width];
-                for (int y = 0; y < height; y++) {
-                    for (int x = 0; x < width; x++) {
-                        tiles[y][x] = tileset.at(in.readInt(), in.readInt());
-                    }
-                }
-
-                return new Map(tileset, tiles, width, height, tileSupplier);
-            }
-        }
-    }
-
-    public static class TileChooser extends Canvas {
-        private final Tileset tileset;
-        private int selectedx = -1, selectedy = -1;
-
-        public TileChooser(Tileset tileset) {
-            this.tileset = tileset;
-
-            setWidth(this.tileset.getImage().getWidth());
-            setHeight(this.tileset.getImage().getHeight());
-
-            setOnMouseClicked(evt -> {
-                selectedx = (int) evt.getX() / tileset.getWidth();
-                selectedy = (int) evt.getY() / tileset.getHeight();
-
-                draw();
-            });
-
-            draw();
-        }
-
-        public Optional<Tileset.Tile> getSelected() {
-            return selectedx != -1 ?
-                    selectedy != -1 ?
-                            Optional.of(tileset.at(selectedx, selectedy)):
-                            Optional.empty():
-                            Optional.empty();
-        }
-
-        private void draw() {
-            GraphicsContext g = getGraphicsContext2D();
-
-            g.drawImage(tileset.getImage(), 0, 0);
-
-            if (selectedx != -1 && selectedy != -1) {
-                g.setStroke(Color.RED);
-                g.strokeRect(selectedx * tileset.getWidth(), selectedy * tileset.getHeight(), tileset.getWidth(), tileset.getHeight());
-            }
-        }
-    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -242,20 +27,35 @@ public final class App extends Application {
         tileChooserPane.setFitToWidth(true);
         tileChooserPane.setFitToHeight(true);
 
-        Map map = new Map(tileset, 23, 17, tileChooser::getSelected);
-        ScrollPane mapPane = new ScrollPane(map);
+        MapView mapView = new MapView(Map.newEmptyMap(tileset, 23, 17), tileChooser::getSelected);
+        ScrollPane mapPane = new ScrollPane(mapView);
         mapPane.setFitToWidth(true);
         mapPane.setFitToHeight(true);
 
         Button saveBtn = new Button("Save");
         saveBtn.setOnMouseClicked(evt -> {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Chauviste RPG map file", "*.map"));
+            FileChooser fileChooser = newFileChooser();
 
             File file = fileChooser.showSaveDialog(primaryStage);
             if (file != null) {
                 try {
-                    map.saveTo(file);
+                    mapView.getMap().saveTo(file);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        Button openBtn = new Button("Open");
+        openBtn.setOnMouseClicked(evt -> {
+            FileChooser fileChooser = newFileChooser();
+
+            File file = fileChooser.showOpenDialog(primaryStage);
+            if (file != null) {
+                try {
+                    Map map = Map.readFrom(file);
+                    mapView.setMap(map);
+                    tileChooser.setTileset(map.getTileset());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -266,16 +66,17 @@ public final class App extends Application {
         closeBtn.setOnMouseClicked(evt -> Platform.exit());
 
         Button clearBtn = new Button("Clear");
-        clearBtn.setOnMouseClicked(evt -> tileChooser.getSelected().ifPresent(map::clearWith));
+        clearBtn.setOnMouseClicked(evt -> tileChooser.getSelected().ifPresent(mapView::clearWith));
 
         Button toggleGridBtn = new Button("Toggle Grid");
-        toggleGridBtn.setOnMouseClicked(evt -> map.toggleGrid());
+        toggleGridBtn.setOnMouseClicked(evt -> mapView.toggleGrid());
 
         primaryStage.setScene(new Scene(
                 new HBox(10.0,
                         new VBox(10.0,
                                 mapPane,
                                 new HBox(20.0,
+                                        openBtn,
                                         saveBtn,
                                         closeBtn,
                                         clearBtn,
@@ -286,6 +87,12 @@ public final class App extends Application {
                 )
         ));
         primaryStage.show();
+    }
+
+    private static FileChooser newFileChooser() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Chauviste RPG map file", "*.map"));
+        return fileChooser;
     }
 
     public static void main(String[] args) {
