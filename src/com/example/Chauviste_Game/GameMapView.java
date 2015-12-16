@@ -36,7 +36,7 @@ public class GameMapView extends View {
         this.heroPaint = new Paint();
         this.tilesetPaint = new Paint();
 
-        this.map = GameMap.readFrom(context.getResources(), R.raw.startMap);
+        this.map = GameMap.readFrom(context.getResources(), R.raw.testmap);
         this.tileset = this.map.getTileset();
 
         startx = starty = 0;
@@ -68,8 +68,8 @@ public class GameMapView extends View {
         int originx = (w-1)/2, originy = (h-1)/2;
 
         // draw the map on the screen
-        for (int y = 0; y < w; y++) {
-            for (int x = 0; x < h; x++) {
+        for (int y = 0; y < h; y++) {
+            for (int x = 0; x < w; x++) {
                 // we got the tile coordinates, let's get them in term of pixels
                 rect.set(x * tileWidth,
                         y * tileHeight,
