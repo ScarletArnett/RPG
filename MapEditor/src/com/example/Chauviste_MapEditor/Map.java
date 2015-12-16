@@ -12,18 +12,19 @@ import java.io.*;
  */
 public class Map {
     private final Tileset tileset;
-    private final Tileset.Tile[][] tiles;
-    private final int width, height;
+    private final Tileset.Tile[][][] tiles;
+    private final int width, height, nlayer;
 
-    public Map(Tileset tileset, Tileset.Tile[][] tiles, int width, int height) {
+    public Map(Tileset tileset, Tileset.Tile[][][] tiles, int width, int height, int nlayer) {
         this.tileset = tileset;
         this.tiles = tiles;
         this.width = width;
         this.height = height;
+        this.nlayer = nlayer;
     }
 
-    public Map(Tileset tileset, int width, int height) {
-        this(tileset, new Tileset.Tile[height][width], width, height);
+    public Map(Tileset tileset, int width, int height, int nlayer) {
+        this(tileset, new Tileset.Tile[nlayer][height][width], width, height, nlayer);
     }
 
     public Tileset getTileset() {
@@ -38,20 +39,28 @@ public class Map {
         return height;
     }
 
-    public Tileset.Tile at(int x, int y) {
-        return tiles[y][x];
+    public int getNlayer() {
+        return nlayer;
     }
 
-    public void set(int x, int y, Tileset.Tile tile) {
-        tiles[y][x] = tile;
+    public Tileset.Tile at(int x, int y, int l) {
+        return tiles[l][y][x];
     }
 
-    public void clear(Tileset.Tile tile) {
+    public void set(int x, int y, Tileset.Tile tile, int layer) {
+        tiles[layer][y][x] = tile;
+    }
+
+    public void clear(Tileset.Tile tile, int l) {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                tiles[y][x] = tile;
+                tiles[l][y][x] = tile;
             }
         }
+    }
+
+    public Map withSameDimensions(Tileset tileset) {
+        return Map.newEmptyMap(tileset, width, height, nlayer);
     }
 
     public void saveTo(File file) throws IOException {
@@ -66,13 +75,16 @@ public class Map {
             out.writeInt(imgBytes.length);
             out.write(imgBytes);
 
+            out.writeInt(nlayer);
             out.writeInt(width);
             out.writeInt(height);
 
-            for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++) {
-                    Tileset.Tile tile = tiles[y][x];
-                    out.writeInt(tile.getId());
+            for (int l = 0; l < nlayer; l++) {
+                for (int y = 0; y < height; y++) {
+                    for (int x = 0; x < width; x++) {
+                        Tileset.Tile tile = tiles[l][y][x];
+                        out.writeInt(tile.getId());
+                    }
                 }
             }
         }
@@ -91,22 +103,25 @@ public class Map {
             Image img = SwingFXUtils.toFXImage(ImageIO.read(new ByteArrayInputStream(imgBytes)), null);
             Tileset tileset = new Tileset(img, tileWidth, tileHeight);
 
+            int nlayer = in.readInt();
             int width = in.readInt();
             int height = in.readInt();
-            Tileset.Tile[][] tiles = new Tileset.Tile[height][width];
-            for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++) {
-                    tiles[y][x] = tileset.getById(in.readInt());
+            Tileset.Tile[][][] tiles = new Tileset.Tile[nlayer][height][width];
+            for (int l = 0; l < nlayer; l++) {
+                for (int y = 0; y < height; y++) {
+                    for (int x = 0; x < width; x++) {
+                        tiles[l][y][x] = tileset.getById(in.readInt());
+                    }
                 }
             }
 
-            return new Map(tileset, tiles, width, height);
+            return new Map(tileset, tiles, width, height, nlayer);
         }
     }
 
-    public static Map newEmptyMap(Tileset tileset, int w, int h) {
-        Map map = new Map(tileset, w, h);
-        map.clear(tileset.at(0, 0));
+    public static Map newEmptyMap(Tileset tileset, int w, int h, int l) {
+        Map map = new Map(tileset, w, h, l);
+        map.clear(tileset.at(0, 0), 0);
         return map;
     }
 }

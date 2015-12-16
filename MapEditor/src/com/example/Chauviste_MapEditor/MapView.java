@@ -6,6 +6,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 import java.util.Optional;
+import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 
 /**
@@ -13,14 +14,16 @@ import java.util.function.Supplier;
  */
 public class MapView extends Canvas {
     private final Supplier<Optional<Tileset.Tile>> tileSupplier;
+    private final IntSupplier layerSupplier;
     private Map map;
     private Tileset tileset;
     private boolean grid = true;
 
-    public MapView(Map map, Supplier<Optional<Tileset.Tile>> tileSupplier) {
+    public MapView(Map map, Supplier<Optional<Tileset.Tile>> tileSupplier, IntSupplier layerSupplier) {
         this.map = map;
-        this.tileset = map.getTileset();
+        this.layerSupplier = layerSupplier;
         this.tileSupplier = tileSupplier;
+        this.tileset = map.getTileset();
 
         setWidth(tileset.getWidth() * map.getWidth());
         setHeight(tileset.getHeight() * map.getHeight());
@@ -55,25 +58,31 @@ public class MapView extends Canvas {
         int x = (int) evt.getX() / tileset.getWidth();
         int y = (int) evt.getY() / tileset.getHeight();
 
-        map.set(x, y, tile.get());
+        map.set(x, y, tile.get(), layerSupplier.getAsInt());
         draw();
     }
 
     public void clearWith(Tileset.Tile tile) {
-        map.clear(tile);
+        map.clear(tile, 0);
         draw();
     }
 
     private void draw() {
         GraphicsContext g = getGraphicsContext2D();
 
+        g.clearRect(0, 0, getWidth(), getHeight());
+
         g.setStroke(Color.BLACK);
-        for (int y = 0; y < map.getHeight(); y++) {
-            for (int x = 0; x < map.getWidth(); x++) {
-                Tileset.Tile tile = map.at(x, y);
-                tile.draw(g, x, y);
-                if (grid) {
-                    g.strokeRect(x * tileset.getWidth(), y * tileset.getHeight(), tileset.getWidth(), tileset.getHeight());
+        for (int l = 0; l < map.getNlayer(); l++) {
+            for (int y = 0; y < map.getHeight(); y++) {
+                for (int x = 0; x < map.getWidth(); x++) {
+                    Tileset.Tile tile = map.at(x, y, l);
+                    if (tile != null) {
+                        tile.draw(g, x, y);
+                    }
+                    if (grid) {
+                        g.strokeRect(x * tileset.getWidth(), y * tileset.getHeight(), tileset.getWidth(), tileset.getHeight());
+                    }
                 }
             }
         }

@@ -20,13 +20,17 @@ public class TileChooser extends Canvas {
         setHeight(this.tileset.getImage().getHeight());
 
         setOnMouseClicked(evt -> {
-            selectedx = (int) evt.getX() / tileset.getWidth();
-            selectedy = (int) evt.getY() / tileset.getHeight();
+            selectedx = (int) evt.getX() / this.tileset.getWidth();
+            selectedy = (int) evt.getY() / this.tileset.getHeight();
 
             draw();
         });
 
         draw();
+    }
+
+    public Tileset getTileset() {
+        return tileset;
     }
 
     public void setTileset(Tileset tileset) {
@@ -45,6 +49,8 @@ public class TileChooser extends Canvas {
 
     private void draw() {
         GraphicsContext g = getGraphicsContext2D();
+
+        g.clearRect(0, 0, getWidth(), getHeight());
 
         g.drawImage(tileset.getImage(), 0, 0);
 

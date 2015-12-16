@@ -52,6 +52,10 @@ public class Tileset {
         return height;
     }
 
+    public Tileset withDimensions(int w, int h) {
+        return new Tileset(image, w, h);
+    }
+
     public class Tile {
         private final int i, j;
 
